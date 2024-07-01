@@ -28,10 +28,10 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True) # hide the CSS code fr
 with st.sidebar:
         #st.image('mg.png')
         st.title("Mangifera Healthika")
-        st.subheader("Accurate detection of diseases present in the mango leaves. This helps an user to easily detect the disease and identify it's cause.")
+        st.subheader("Vineyard leaf disease prediction is a crucial aspect of viticulture aimed at identifying and managing diseases that can affect the health and productivity of grapevines. Effective prediction allows vineyard managers to take timely actions to mitigate the spread of diseases, ensuring a healthy yield.")
 
 st.write("""
-         # Mango Disease Detection with Remedy Suggestion
+         # Vineyard Leaf Disease Prediction
          """
          )
 
