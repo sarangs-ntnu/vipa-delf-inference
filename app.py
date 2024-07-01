@@ -54,15 +54,18 @@ st.write("""
 
 
 #get input image
-image = st.camera_input("Take a picture")
-if image is not None:
-	st.image(image, caption='Captured Image')
+#image = st.camera_input("Take a picture")
+#if image is not None:
+	#st.image(image, caption='Captured Image')
+image = st.file_uploader(
+    "Upload your image in JPG or PNG format", type=["jpg", "png"]
+)
 
 # Define device
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda:0" if use_cuda else "cpu")
 
-"""def create_pretrained_densenet(num_classes):
+def create_pretrained_densenet(num_classes):
     model = models.densenet121(pretrained=True)
     # Replace the classifier with a new one (the number of classes in your dataset)
     num_ftrs = model.classifier.in_features
@@ -75,7 +78,7 @@ model = create_pretrained_densenet(num_classes)
 model.to(device)
 
 # Load best model weights
-best_model_path = "fl_densenet_10.pth"
+best_model_path = "C_30_32.pth"
 checkpoint = torch.load(best_model_path)
 model.load_state_dict(checkpoint['state_dict'])
 print("Model loaded successfully")
@@ -107,7 +110,7 @@ with torch.no_grad():
     predicted_class_index = predicted.item()
     
     # Interpret the results (assuming you have a class label mapping)
-    class_labels = ['Healthy','Disease' ]  # Replace with your actual class labels
+    class_labels = ['Apple___healthy', 'Apple___Cedar_apple_rust', 'Apple___Black_rot', 'Apple___Apple_scab']  # Replace with your actual class labels
     predicted_class_label = class_labels[predicted_class_index]
 
 print('Predicted class:', predicted_class_label)
@@ -200,4 +203,4 @@ lime_image = mark_boundaries(temp, mask, color=(1, 0, 0))
 plt.imshow(lime_image)
 plt.title(f'LIME: {predicted_class_label}')
 plt.axis('off')
-plt.show()"""
+plt.show()
