@@ -61,4 +61,143 @@ if image is not None:
 # Define device
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda:0" if use_cuda else "cpu")
-st.write(device)
+
+"""def create_pretrained_densenet(num_classes):
+    model = models.densenet121(pretrained=True)
+    # Replace the classifier with a new one (the number of classes in your dataset)
+    num_ftrs = model.classifier.in_features
+    model.classifier = nn.Linear(num_ftrs, num_classes)
+    return model
+
+# Load model
+num_classes = 2
+model = create_pretrained_densenet(num_classes)
+model.to(device)
+
+# Load best model weights
+best_model_path = "fl_densenet_10.pth"
+checkpoint = torch.load(best_model_path)
+model.load_state_dict(checkpoint['state_dict'])
+print("Model loaded successfully")
+
+# Define transform
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.4762, 0.3054, 0.2368], std=[0.3345, 0.2407, 0.2164])
+])
+
+image = Image.open(image)
+
+image = Image.open(image_path)
+
+# Apply the transform to the image
+image_tensor  = transform(image)
+
+# Add batch dimension
+image_tensor  = image_tensor.unsqueeze(0)
+image_tensor  = image_tensor.to(device)
+
+# Perform inference
+with torch.no_grad():
+    output = model(image_tensor)
+
+    # Get the predicted class index
+    _, predicted = torch.max(output, 1)
+    predicted_class_index = predicted.item()
+    
+    # Interpret the results (assuming you have a class label mapping)
+    class_labels = ['Healthy','Disease' ]  # Replace with your actual class labels
+    predicted_class_label = class_labels[predicted_class_index]
+
+print('Predicted class:', predicted_class_label)
+
+# GradCAM Implementation
+def generate_gradcam_heatmap(model, image_tensor, target_layer):
+    # Hook for the gradients
+    gradients = []
+    
+    def backward_hook(module, grad_in, grad_out):
+        gradients.append(grad_out[0])
+
+    # Register hook on the target layer
+    hook = target_layer.register_backward_hook(backward_hook)
+
+    # Forward pass
+    model.eval()
+    output = model(image_tensor)
+    pred_class = output.argmax(dim=1).item()
+    
+    # Zero the gradients
+    model.zero_grad()
+    
+    # Backward pass
+    class_loss = output[0, pred_class]
+    class_loss.backward()
+
+    # Get the gradients and the activations
+    gradients = gradients[0].cpu().data.numpy()[0]
+    activations = target_layer.weight.data.cpu().numpy()[0]
+    
+    # Calculate the weights
+    weights = np.mean(gradients, axis=(1, 2))
+    
+    # Calculate the GradCAM heatmap
+    gradcam_heatmap = np.zeros(activations.shape[1:], dtype=np.float32)
+    for i, w in enumerate(weights):
+        gradcam_heatmap += w * activations[i]
+        
+    # Apply ReLU and normalize
+    gradcam_heatmap = np.maximum(gradcam_heatmap, 0)
+    gradcam_heatmap = gradcam_heatmap / gradcam_heatmap.max()
+    
+    # Resize the heatmap to match the input image
+    gradcam_heatmap = np.uint8(255 * gradcam_heatmap)
+    gradcam_heatmap = Image.fromarray(gradcam_heatmap).resize((image.size[0], image.size[1]), Image.ANTIALIAS)
+    gradcam_heatmap = np.asarray(gradcam_heatmap)
+    
+    # Remove the hook
+    hook.remove()
+    
+    return gradcam_heatmap
+
+# Get the last convolutional layer
+target_layer = model.features.denseblock4.denselayer16.conv2
+
+# Generate GradCAM heatmap
+gradcam_heatmap = generate_gradcam_heatmap(model, image_tensor, target_layer)
+
+# Overlay the heatmap on the original image
+plt.imshow(image)
+plt.imshow(gradcam_heatmap, cmap='jet', alpha=0.5)
+plt.title(f'GradCAM: {predicted_class_label}')
+plt.axis('off')
+plt.show()
+
+# LIME Implementation
+def batch_predict(images):
+    model.eval()
+    batch = torch.stack([transform(Image.fromarray(i)) for i in images], dim=0)
+    batch = batch.to(device)
+    logits = model(batch)
+    probs = torch.nn.functional.softmax(logits, dim=1).cpu().detach().numpy()
+    return probs
+
+explainer = lime_image.LimeImageExplainer()
+
+explanation = explainer.explain_instance(np.array(image), 
+                                         batch_predict, 
+                                         top_labels=2, 
+                                         hide_color=0, 
+                                         num_samples=1000,
+                                         segmentation_fn=None)
+
+# Map each explanation to the corresponding label
+temp, mask = explanation.get_image_and_mask(predicted_class_index, positive_only=True, num_features=10, hide_rest=False)
+lime_image = mark_boundaries(temp, mask, color=(1, 0, 0))
+
+# Display LIME explanation
+plt.imshow(lime_image)
+plt.title(f'LIME: {predicted_class_label}')
+plt.axis('off')
+plt.show()"""
