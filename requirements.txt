@@ -1,7 +1,7 @@
 lime==0.2.0.1
 numpy==1.23.0
 Pillow
-skimage==0.0
+scikit-image
 streamlit==1.36.0
 torch==2.0.0
 torchvision==0.15.1
