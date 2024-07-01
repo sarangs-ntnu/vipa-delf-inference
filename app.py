@@ -64,26 +64,27 @@ image = st.file_uploader(
 if image is not None:
 
     # Define device
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda:0" if use_cuda else "cpu")
+    use_cuda=torch.cuda.is_available()
+    use_mps = torch.backends.mps.is_available()
+    device=torch.device("cuda:0" if use_cuda else "mps" if use_mps else "cpu")
+    device = "cpu" 
+    device
 
-    def create_pretrained_densenet(num_classes):
-        model = models.densenet121(pretrained=True)
-        # Replace the classifier with a new one (the number of classes in your dataset)
-        num_ftrs = model.classifier.in_features
-        model.classifier = nn.Linear(num_ftrs, num_classes)
-        return model
+    model_path = 'C_30_32.pth'
 
-    # Load model
-    num_classes = 2
-    model = create_pretrained_densenet(num_classes)
-    model.to(device)
+    #Initialize model
+    print('Best model path:{}'.format(model_path))
+    denseNet_model= models.densenet121(weights=False).to(device)
 
-    # Load best model weights
-    best_model_path = "C_30_32.pth"
-    checkpoint = torch.load(best_model_path, map_location=torch.device('cpu'))
-    model.load_state_dict(checkpoint['state_dict'])
-    print("Model loaded successfully")
+    n_inputs = denseNet_model.classifier.in_features
+    denseNet_model.classifier = nn.Sequential(
+              nn.Linear(n_inputs, n_classes),               
+              nn.LogSoftmax(dim=1))
+
+    checkpoint=torch.load(model_path,map_location=device)   # loading best model
+    # change name of model dictionary key as per your model key defined while saving the model.
+    denseNet_model.load_state_dict(checkpoint['model_state_dict'])
+    denseNet_model.to(device)
 
     # Define transform
     transform = transforms.Compose([
@@ -105,7 +106,7 @@ if image is not None:
 
     # Perform inference
     with torch.no_grad():
-        output = model(image_tensor)
+        output = denseNet_model(image_tensor)
 
         # Get the predicted class index
         _, predicted = torch.max(output, 1)
@@ -130,7 +131,7 @@ if image is not None:
 
         # Forward pass
         model.eval()
-        output = model(image_tensor)
+        output = denseNet_model(image_tensor)
         pred_class = output.argmax(dim=1).item()
         
         # Zero the gradients
@@ -167,10 +168,10 @@ if image is not None:
         return gradcam_heatmap
 
     # Get the last convolutional layer
-    target_layer = model.features.denseblock4.denselayer16.conv2
+    target_layer = denseNet_model.features.denseblock4.denselayer16.conv2
 
     # Generate GradCAM heatmap
-    gradcam_heatmap = generate_gradcam_heatmap(model, image_tensor, target_layer)
+    gradcam_heatmap = generate_gradcam_heatmap(denseNet_model, image_tensor, target_layer)
 
     # Overlay the heatmap on the original image
     plt.imshow(image)
@@ -181,10 +182,10 @@ if image is not None:
 
     # LIME Implementation
     def batch_predict(images):
-        model.eval()
+        denseNet_model.eval()
         batch = torch.stack([transform(Image.fromarray(i)) for i in images], dim=0)
         batch = batch.to(device)
-        logits = model(batch)
+        logits = denseNet_model(batch)
         probs = torch.nn.functional.softmax(logits, dim=1).cpu().detach().numpy()
         return probs
 
