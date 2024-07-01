@@ -3,6 +3,22 @@ import streamlit as st
 import random
 from PIL import Image, ImageOps
 import numpy as np
+import torch
+import torchvision.transforms as transforms
+from PIL import Image
+import os
+from torchvision import models
+from lime import lime_image
+from skimage.segmentation import mark_boundaries
+from collections import OrderedDict
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import torch.nn as nn
+import torch.nn.functional as F
+import torchvision.transforms as transforms
+from torch.utils.data import random_split
+from torchvision.datasets import CIFAR10
 
 
 # hide deprication warnings which directly don't affect the working of the application
@@ -41,3 +57,8 @@ st.write("""
 image = st.camera_input("Take a picture")
 if image is not None:
 	st.image(image, caption='Captured Image')
+
+# Define device
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda:0" if use_cuda else "cpu")
+st.write(device)
