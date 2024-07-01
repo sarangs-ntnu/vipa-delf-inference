@@ -27,8 +27,9 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True) # hide the CSS code fr
 
 with st.sidebar:
         #st.image('mg.png')
-        st.title("Mangifera Healthika")
+        st.title("VIPA-DELF")
         st.subheader("Vineyard leaf disease prediction is a crucial aspect of viticulture aimed at identifying and managing diseases that can affect the health and productivity of grapevines. Effective prediction allows vineyard managers to take timely actions to mitigate the spread of diseases, ensuring a healthy yield.")
+        st.write("The 'VIPA-DELF' sub-project has indirectly received funding from the European Union's Horizon Europe research and innovation action programme, via the CHAMELEON Open Call #1 issued and executed under the CHAMELEON project (Grant Agreement no. 101060529)")
 
 st.write("""
          # Vineyard Leaf Disease Prediction
