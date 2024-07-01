@@ -76,6 +76,8 @@ if image is not None:
     print('Best model path:{}'.format(model_path))
     denseNet_model= models.densenet121(weights=False).to(device)
 
+    n_classes = 2
+
     n_inputs = denseNet_model.classifier.in_features
     denseNet_model.classifier = nn.Sequential(
               nn.Linear(n_inputs, n_classes),               
