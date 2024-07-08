@@ -66,12 +66,29 @@ if image is not None:
 
 if image is not None:
 
-    random_id = str(uuid.uuid4())
+    # Function to convert PIL image to bytes
+    def pil_image_to_bytes(image):
+        img_byte_arr = io.BytesIO()
+        image.save(img_byte_arr, format='PNG')
+        img_byte_arr = img_byte_arr.getvalue()
+        return img_byte_arr
 
-    file_path = os.path.join("images", f"{random_id}.png")
-    # Ensure the directory exists
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    # Save the image
+    img = Image.open(image)
+
+    # Generate a random ID for the filename
+    random_id = str(uuid.uuid4())
+    filename = f"{random_id}.png"
+
+    # Convert image to bytes
+    img_bytes = pil_image_to_bytes(img)
+
+    # Create a download link
+    st.download_button(
+        label="Download Image",
+        data=img_bytes,
+        file_name=filename,
+        mime="image/png"
+    )
     
 
     # Define device
