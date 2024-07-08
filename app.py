@@ -22,6 +22,8 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 import os
+import os
+import uuid
 
 
 # hide deprication warnings which directly don't affect the working of the application
@@ -63,6 +65,14 @@ if image is not None:
 #image = st.file_uploader("Upload your image in JPG or PNG format", type=["jpg", "png"])
 
 if image is not None:
+
+    random_id = str(uuid.uuid4())
+
+    file_path = os.path.join("images", f"{random_id}.png")
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    # Save the image
+    image.save(file_path)
 
     # Define device
     use_cuda=torch.cuda.is_available()
