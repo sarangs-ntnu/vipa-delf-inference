@@ -57,11 +57,10 @@ st.write("""
 
 
 #get input image
-#image = st.camera_input("Take a picture")
-#if image is not None:
-	#st.image(image, caption='Captured Image')
-image = st.file_uploader(
-    "Upload your image in JPG or PNG format", type=["jpg", "png"]
+image = st.camera_input("Take a picture")
+if image is not None:
+	st.image(image, caption='Captured Image')
+#image = st.file_uploader("Upload your image in JPG or PNG format", type=["jpg", "png"]
 )
 
 if image is not None:
