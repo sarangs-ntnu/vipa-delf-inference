@@ -4,6 +4,7 @@ import random
 from PIL import Image, ImageOps
 import numpy as np
 import torch
+import torchvision
 import torchvision.transforms as transforms
 from PIL import Image
 import os
