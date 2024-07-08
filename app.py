@@ -143,7 +143,7 @@ if image is not None:
                                              batch_predict, 
                                              top_labels=2, 
                                              hide_color=0, 
-                                             num_samples=100,
+                                             num_samples=50,
                                              segmentation_fn=None)
 
     # Map each explanation to the corresponding label
@@ -153,9 +153,16 @@ if image is not None:
     import matplotlib.pyplot as plt
     plt.imsave(lime_image_path, lime_image)
 
-    print('done')
-
-    st.image(lime_image_path, caption=f"LIME: {predicted_class_label}", use_column_width=True)
+    # Display the uploaded image and LIME explanation in a grid
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.header("Original Image")
+        st.image(input_image_path, use_column_width=True)
+    
+    with col2:
+        st.header(f"LIME Explanation {predicted_class_label}")
+        st.image(lime_image_path, use_column_width=True)
 
     # Display the LIME explanation
     #st.image(lime_image, caption=f'LIME: {predicted_class_index}', use_column_width=True)
