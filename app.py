@@ -72,7 +72,7 @@ if image is not None:
     # Ensure the directory exists
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     # Save the image
-    image.save(file_path)
+    
 
     # Define device
     use_cuda=torch.cuda.is_available()
@@ -105,7 +105,10 @@ if image is not None:
 
     # Function to load and preprocess image
     def load_image(image_path):
-        image = Image.open(image_path).convert("RGB")
+
+        image = Image.open(image_path)
+        image.save(file_path)
+        image = image.convert("RGB")
         image = transform(image)
         image = image.unsqueeze(0)  # Add batch dimension
         return image
