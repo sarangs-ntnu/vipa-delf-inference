@@ -192,11 +192,3 @@ if image is not None:
     with col2:
         st.subheader(f"LIME Explanation {predicted_class_label}")
         st.image(lime_image_path, use_column_width=True)
-        st.write(f"Saved at: `{os.path.abspath(lime_image_path)}`")
-
-    # Display the LIME explanation
-    #st.image(lime_image, caption=f'LIME: {predicted_class_index}', use_column_width=True)
-
-    # Optionally, display the original image and class label
-    #st.image(image, caption='Original Image', use_column_width=True)
-    #st.write(f'Predicted Class Index: {predicted_class_index}')
