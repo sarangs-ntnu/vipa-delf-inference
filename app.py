@@ -115,8 +115,6 @@ if image is not None:
         # Interpret the results (assuming you have a class label mapping)
         class_labels = ['Disease','Healthy']  # Replace with your actual class labels
         predicted_class_label = class_labels[predicted_class_index]
-        st.write('Predicted class: ')
-        st.write(predicted_class_label)
         if predicted_class_label == 'Healthy':
             st.write(f"The input vineyard image leaf shows : :green[{predicted_class_label}] symptoms.")
         else:
