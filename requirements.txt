@@ -1,7 +1,8 @@
 lime==0.2.0.1
+matplotlib==3.5.3
 numpy==1.23.0
 Pillow
-scikit-image
+skimage==0.0
 streamlit==1.36.0
 torch==2.0.0
 torchvision==0.15.1

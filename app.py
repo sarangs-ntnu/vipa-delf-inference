@@ -119,3 +119,39 @@ if image is not None:
             st.write(f"The input vineyard image leaf shows : :green[{predicted_class_label}] symptoms.")
         else:
             st.write(f"The input vineyard image leaf shows : :red[{predicted_class_label}] symptoms.")
+
+
+    # LIME Implementation
+    from lime import lime_image
+    from skimage.segmentation import mark_boundaries
+
+    def batch_predict(images):
+        test_model.eval()
+        batch = torch.stack([transform(Image.fromarray(i)) for i in images], dim=0)
+        batch = batch.to(device)
+        with torch.no_grad():
+            logits = test_model(batch)
+        probs = torch.nn.functional.softmax(logits, dim=1).cpu().detach().numpy()
+        return probs
+
+    explainer = lime_image.LimeImageExplainer()
+
+
+    image = Image.open(image)
+
+    explanation = explainer.explain_instance(np.array(image), 
+                                             batch_predict, 
+                                             top_labels=2, 
+                                             hide_color=0, 
+                                             num_samples=1000,
+                                             segmentation_fn=None)
+
+    # Map each explanation to the corresponding label
+    temp, mask = explanation.get_image_and_mask(predicted_class_index, positive_only=True, num_features=10, hide_rest=False)
+    lime_image = mark_boundaries(temp, mask, color=(1, 0, 0))
+
+    import matplotlib.pyplot as plt
+    plt.imshow(lime_image)
+    plt.title(f'LIME: {predicted_class_label}')
+    plt.axis('off')
+    plt.show()
