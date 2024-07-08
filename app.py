@@ -149,10 +149,16 @@ if image is not None:
     # Map each explanation to the corresponding label
     temp, mask = explanation.get_image_and_mask(predicted_class_index, positive_only=True, num_features=10, hide_rest=False)
     lime_image = mark_boundaries(temp, mask, color=(1, 0, 0))
+    lime_image_path = "lime_explanation.png"
+    plt.imsave(lime_image_path, lime_image)
+
+    print('done')
+
+    st.image(lime_image_path, caption=f"LIME: {predicted_class_label}", use_column_width=True)
 
     # Display the LIME explanation
-    st.image(lime_image, caption=f'LIME: {predicted_class_index}', use_column_width=True)
+    #st.image(lime_image, caption=f'LIME: {predicted_class_index}', use_column_width=True)
 
     # Optionally, display the original image and class label
-    st.image(image, caption='Original Image', use_column_width=True)
-    st.write(f'Predicted Class Index: {predicted_class_index}')
+    #st.image(image, caption='Original Image', use_column_width=True)
+    #st.write(f'Predicted Class Index: {predicted_class_index}')
