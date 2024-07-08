@@ -157,12 +157,13 @@ if image is not None:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.header("Original Image")
+        st.subheader("Original Image")
         st.image(image, use_column_width=True)
     
     with col2:
-        st.header(f"LIME Explanation {predicted_class_label}")
+        st.subheader(f"LIME Explanation {predicted_class_label}")
         st.image(lime_image_path, use_column_width=True)
+        st.write(f"Saved at: `{os.path.abspath(lime_image_path)}`")
 
     # Display the LIME explanation
     #st.image(lime_image, caption=f'LIME: {predicted_class_index}', use_column_width=True)
