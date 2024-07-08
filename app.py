@@ -126,7 +126,6 @@ if image is not None:
     def load_image(image_path):
 
         image = Image.open(image_path)
-        image.save(file_path)
         image = image.convert("RGB")
         image = transform(image)
         image = image.unsqueeze(0)  # Add batch dimension
