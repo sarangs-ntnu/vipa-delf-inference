@@ -79,7 +79,7 @@ if image is not None:
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
 
-    test_model_path = "C_30_32.pth"
+    test_model_path = "C_30_32_01.pth"
     n_classes = 2
 
     test_model=torchvision.models.densenet121(weights=False).to(device)
