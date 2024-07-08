@@ -158,7 +158,7 @@ if image is not None:
     
     with col1:
         st.header("Original Image")
-        st.image(input_image_path, use_column_width=True)
+        st.image(image, use_column_width=True)
     
     with col2:
         st.header(f"LIME Explanation {predicted_class_label}")
