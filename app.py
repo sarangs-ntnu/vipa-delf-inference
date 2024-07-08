@@ -143,7 +143,7 @@ if image is not None:
                                              batch_predict, 
                                              top_labels=2, 
                                              hide_color=0, 
-                                             num_samples=500,
+                                             num_samples=10,
                                              segmentation_fn=None)
 
     # Map each explanation to the corresponding label
