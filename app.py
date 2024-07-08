@@ -70,8 +70,7 @@ if image is not None:
     use_cuda=torch.cuda.is_available()
     use_mps = torch.backends.mps.is_available()
     device=torch.device("cuda:0" if use_cuda else "mps" if use_mps else "cpu")
-    device = "cpu" 
-    device
+    device = "cpu"
 
     #define transformation
     transform = transforms.Compose([
@@ -118,3 +117,7 @@ if image is not None:
         predicted_class_label = class_labels[predicted_class_index]
         st.write('Predicted class: ')
         st.write(predicted_class_label)
+        if predicted_class_label == 'Healthy':
+            st.write(f"The input vineyard image leaf shows : :green[{predicted_class_label}] symptoms.")
+        else:
+            st.write(f"The input vineyard image leaf shows : :red[{predicted_class_label}] symptoms.")
