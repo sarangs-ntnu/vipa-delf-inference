@@ -150,6 +150,7 @@ if image is not None:
     temp, mask = explanation.get_image_and_mask(predicted_class_index, positive_only=True, num_features=10, hide_rest=False)
     lime_image = mark_boundaries(temp, mask, color=(1, 0, 0))
     lime_image_path = "lime_explanation.png"
+    import matplotlib.pyplot as plt
     plt.imsave(lime_image_path, lime_image)
 
     print('done')
